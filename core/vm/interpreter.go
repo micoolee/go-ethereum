@@ -138,7 +138,7 @@ func NewEVMInterpreter(evm *EVM, cfg Config) *EVMInterpreter {
 // It's important to note that any errors returned by the interpreter should be
 // considered a revert-and-consume-all-gas operation except for
 // ErrExecutionReverted which means revert-and-keep-gas-left.
-func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (ret []byte, err error) {
+func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (ret []byte, err error) { //mike 运行evm函数
 
 	// Increment the call depth which is restricted to 1024
 	in.evm.depth++
@@ -207,7 +207,7 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 	// the execution of one of the operations or until the done flag is set by the
 	// parent context.
 	steps := 0
-	for {
+	for { //mike 执行合约函数
 		steps++
 		if steps%1000 == 0 && atomic.LoadInt32(&in.evm.abort) != 0 {
 			break
@@ -220,7 +220,7 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 		// Get the operation from the jump table and validate the stack to ensure there are
 		// enough stack items available to perform the operation.
 		op = contract.GetOp(pc)
-		operation := in.cfg.JumpTable[op]
+		operation := in.cfg.JumpTable[op] //mike 构建一个operation步骤
 		if operation == nil {
 			return nil, &ErrInvalidOpCode{opcode: op}
 		}
@@ -284,7 +284,7 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 		}
 
 		// execute the operation
-		res, err = operation.execute(&pc, in, callContext)
+		res, err = operation.execute(&pc, in, callContext) //mike 执行合约中一个步骤
 		// if the operation clears the return data (e.g. it has returning data)
 		// set the last return to the result of the operation.
 		if operation.returns {
@@ -294,7 +294,7 @@ func (in *EVMInterpreter) Run(contract *Contract, input []byte, readOnly bool) (
 		switch {
 		case err != nil:
 			return nil, err
-		case operation.reverts:
+		case operation.reverts: //mike 如果是revert
 			return res, ErrExecutionReverted
 		case operation.halts:
 			return res, nil

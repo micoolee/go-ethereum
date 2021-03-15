@@ -54,7 +54,7 @@ var (
 	gitCommit = ""
 	gitDate   = ""
 	// The app that holds all commands and flags.
-	app = flags.NewApp(gitCommit, gitDate, "the go-ethereum command line interface")
+	app = flags.NewApp(gitCommit, gitDate, "the go-ethereum command line interface") //mike 以太坊的入口变量app
 	// flags that configure the node
 	nodeFlags = []cli.Flag{
 		utils.IdentityFlag,
@@ -222,12 +222,12 @@ var (
 	}
 )
 
-func init() {
+func init() { //mike 初始化app变量
 	// Initialize the CLI app and start Geth
 	app.Action = geth
 	app.HideVersion = true // we have a command to print the version
 	app.Copyright = "Copyright 2013-2021 The go-ethereum Authors"
-	app.Commands = []cli.Command{
+	app.Commands = []cli.Command{ //mike 支持的command
 		// See chaincmd.go:
 		initCommand,
 		importCommand,
@@ -279,7 +279,7 @@ func init() {
 	}
 }
 
-func main() {
+func main() { //mike 以太坊最开始的地方
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

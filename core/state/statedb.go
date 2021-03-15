@@ -75,9 +75,9 @@ type StateDB struct {
 	snapStorage   map[common.Hash]map[common.Hash][]byte
 
 	// This map holds 'live' objects, which will get modified while processing a state transition.
-	stateObjects        map[common.Address]*stateObject
-	stateObjectsPending map[common.Address]struct{} // State objects finalized but not yet written to the trie
-	stateObjectsDirty   map[common.Address]struct{} // State objects modified in the current execution
+	stateObjects        map[common.Address]*stateObject //mike 状态map
+	stateObjectsPending map[common.Address]struct{}     // State objects finalized but not yet written to the trie
+	stateObjectsDirty   map[common.Address]struct{}     // State objects modified in the current execution
 
 	// DB error.
 	// State objects are used by the consensus core and VM which are
@@ -620,7 +620,7 @@ func (s *StateDB) createObject(addr common.Address) (newobj, prev *stateObject) 
 //   2. tx_create(sha(account ++ nonce)) (note that this gets the address of 1)
 //
 // Carrying over the balance ensures that Ether doesn't disappear.
-func (s *StateDB) CreateAccount(addr common.Address) {
+func (s *StateDB) CreateAccount(addr common.Address) { //mike 创建一个合约账户
 	newObj, prev := s.createObject(addr)
 	if prev != nil {
 		newObj.setBalance(prev.data.Balance)

@@ -136,7 +136,7 @@ var (
 	}
 )
 
-var stateTransitionCommand = cli.Command{
+var stateTransitionCommand = cli.Command{ //mike 运行交易进程
 	Name:    "transition",
 	Aliases: []string{"t8n"},
 	Usage:   "executes a full state transition",
@@ -191,7 +191,7 @@ func init() {
 		disasmCommand,
 		runCommand,
 		stateTestCommand,
-		stateTransitionCommand,
+		stateTransitionCommand, //mike transaction的进程，内含evm验证
 	}
 	cli.CommandHelpTemplate = flags.OriginCommandHelpTemplate
 }

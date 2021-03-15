@@ -42,7 +42,7 @@ func (ar AccountRef) Address() common.Address { return (common.Address)(ar) }
 
 // Contract represents an ethereum contract in the state database. It contains
 // the contract code, calling arguments. Contract implements ContractRef
-type Contract struct {
+type Contract struct { //mike 合约运行时
 	// CallerAddress is the result of the caller which initialised this
 	// contract. However when the "call method" is delegated this value
 	// needs to be initialised to that of the caller's caller.
@@ -56,7 +56,7 @@ type Contract struct {
 	Code     []byte
 	CodeHash common.Hash
 	CodeAddr *common.Address
-	Input    []byte
+	Input    []byte //mike 如果是nil，可能是创建新合约
 
 	Gas   uint64
 	value *big.Int
@@ -177,7 +177,7 @@ func (c *Contract) Caller() common.Address {
 }
 
 // UseGas attempts the use gas and subtracts it and returns true on success
-func (c *Contract) UseGas(gas uint64) (ok bool) {
+func (c *Contract) UseGas(gas uint64) (ok bool) { //mike 使用gas
 	if c.Gas < gas {
 		return false
 	}

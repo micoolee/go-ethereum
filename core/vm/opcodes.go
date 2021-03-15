@@ -21,7 +21,7 @@ import (
 )
 
 // OpCode is an EVM opcode
-type OpCode byte
+type OpCode byte //mike evm的op类型
 
 // IsPush specifies if an opcode is a PUSH opcode.
 func (op OpCode) IsPush() bool {

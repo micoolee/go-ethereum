@@ -74,7 +74,7 @@ func (evm *EVM) precompile(addr common.Address) (PrecompiledContract, bool) {
 }
 
 // run runs the given contract and takes care of running precompiles with a fallback to the byte code interpreter.
-func run(evm *EVM, contract *Contract, input []byte, readOnly bool) ([]byte, error) {
+func run(evm *EVM, contract *Contract, input []byte, readOnly bool) ([]byte, error) { //mike 运行合约
 	for _, interpreter := range evm.interpreters {
 		if interpreter.CanRun(contract.Code) {
 			if evm.interpreter != interpreter {
@@ -85,7 +85,7 @@ func run(evm *EVM, contract *Contract, input []byte, readOnly bool) ([]byte, err
 				}(evm.interpreter)
 				evm.interpreter = interpreter
 			}
-			return interpreter.Run(contract, input, readOnly)
+			return interpreter.Run(contract, input, readOnly) //mike 调用合约
 		}
 	}
 	return nil, errors.New("no compatible interpreter")
@@ -244,7 +244,7 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 			}
 			return nil, gas, nil
 		}
-		evm.StateDB.CreateAccount(addr)
+		evm.StateDB.CreateAccount(addr) //mike 在stateDB中创建一个新地址
 	}
 	evm.Context.Transfer(evm.StateDB, caller.Address(), addr, value)
 
@@ -261,16 +261,16 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 	} else {
 		// Initialise a new contract and set the code that is to be used by the EVM.
 		// The contract is a scoped environment for this execution context only.
-		code := evm.StateDB.GetCode(addr)
+		code := evm.StateDB.GetCode(addr) //mike 获取addr对应的合约代码
 		if len(code) == 0 {
 			ret, err = nil, nil // gas is unchanged
 		} else {
 			addrCopy := addr
 			// If the account has no code, we can abort here
 			// The depth-check is already done, and precompiles handled above
-			contract := NewContract(caller, AccountRef(addrCopy), value, gas)
+			contract := NewContract(caller, AccountRef(addrCopy), value, gas) //mike 创建一个合约运行时
 			contract.SetCallCode(&addrCopy, evm.StateDB.GetCodeHash(addrCopy), code)
-			ret, err = run(evm, contract, input, false)
+			ret, err = run(evm, contract, input, false) //mike 开始调用以太坊合约
 			gas = contract.Gas
 		}
 	}
@@ -450,8 +450,8 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 		evm.StateDB.AddAddressToAccessList(address)
 	}
 	// Ensure there's no existing contract already at the designated address
-	contractHash := evm.StateDB.GetCodeHash(address)
-	if evm.StateDB.GetNonce(address) != 0 || (contractHash != (common.Hash{}) && contractHash != emptyCodeHash) {
+	contractHash := evm.StateDB.GetCodeHash(address)                                                              //mike 确保没有
+	if evm.StateDB.GetNonce(address) != 0 || (contractHash != (common.Hash{}) && contractHash != emptyCodeHash) { //mike 如果合约地址已经存在
 		return nil, common.Address{}, 0, ErrContractAddressCollision
 	}
 	// Create a new account on the state
@@ -476,7 +476,7 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 	}
 	start := time.Now()
 
-	ret, err := run(evm, contract, nil, false)
+	ret, err := run(evm, contract, nil, false) //mike 创建合约
 
 	// check whether the max code size has been exceeded
 	maxCodeSizeExceeded := evm.chainRules.IsEIP158 && len(ret) > params.MaxCodeSize
@@ -497,7 +497,7 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 	// above we revert to the snapshot and consume any gas remaining. Additionally
 	// when we're in homestead this also counts for code storage gas errors.
 	if maxCodeSizeExceeded || (err != nil && (evm.chainRules.IsHomestead || err != ErrCodeStoreOutOfGas)) {
-		evm.StateDB.RevertToSnapshot(snapshot)
+		evm.StateDB.RevertToSnapshot(snapshot) //mike 会滚到snapshot
 		if err != ErrExecutionReverted {
 			contract.UseGas(contract.Gas)
 		}
@@ -515,8 +515,8 @@ func (evm *EVM) create(caller ContractRef, codeAndHash *codeAndHash, gas uint64,
 
 // Create creates a new contract using code as deployment code.
 func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.Int) (ret []byte, contractAddr common.Address, leftOverGas uint64, err error) {
-	contractAddr = crypto.CreateAddress(caller.Address(), evm.StateDB.GetNonce(caller.Address()))
-	return evm.create(caller, &codeAndHash{code: code}, gas, value, contractAddr)
+	contractAddr = crypto.CreateAddress(caller.Address(), evm.StateDB.GetNonce(caller.Address())) //mike 合约地址来源于创建者的地址和nonce值
+	return evm.create(caller, &codeAndHash{code: code}, gas, value, contractAddr)                 //mike 创建合约
 }
 
 // Create2 creates a new contract using code as deployment code.

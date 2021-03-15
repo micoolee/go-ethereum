@@ -203,7 +203,7 @@ func newHomesteadInstructionSet() JumpTable {
 
 // newFrontierInstructionSet returns the frontier instructions
 // that can be executed during the frontier phase.
-func newFrontierInstructionSet() JumpTable {
+func newFrontierInstructionSet() JumpTable { //mike evm的所有op
 	return JumpTable{
 		STOP: {
 			execute:     opStop,

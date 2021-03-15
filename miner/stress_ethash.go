@@ -182,6 +182,6 @@ func makeMiner(genesis *core.Genesis) (*node.Node, *eth.Ethereum, error) {
 		return nil, nil, err
 	}
 
-	err = stack.Start()
+	err = stack.Start() //mike 启动节点
 	return stack, ethBackend, err
 }

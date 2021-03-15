@@ -61,7 +61,7 @@ import (
 type Config = ethconfig.Config
 
 // Ethereum implements the Ethereum full node service.
-type Ethereum struct {
+type Ethereum struct { //mike 最核心的ethereum实例
 	config *ethconfig.Config
 
 	// Handlers
@@ -84,21 +84,21 @@ type Ethereum struct {
 
 	APIBackend *EthAPIBackend
 
-	miner     *miner.Miner
-	gasPrice  *big.Int
+	miner     *miner.Miner //mike 跟挖矿相关的实例
+	gasPrice  *big.Int     //mike gas价格
 	etherbase common.Address
 
-	networkID     uint64
+	networkID     uint64 //mike 使用的networkid
 	netRPCService *ethapi.PublicNetAPI
 
-	p2pServer *p2p.Server
+	p2pServer *p2p.Server //mike p2p服务端
 
 	lock sync.RWMutex // Protects the variadic fields (e.g. gas price and etherbase)
 }
 
 // New creates a new Ethereum object (including the
 // initialisation of the common Ethereum object)
-func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) {
+func New(stack *node.Node, config *ethconfig.Config) (*Ethereum, error) { //mike 创建一个ETH的实例
 	// Ensure configuration values are compatible and sane
 	if config.SyncMode == downloader.LightSync {
 		return nil, errors.New("can't run eth.Ethereum in light sync mode, use les.LightEthereum")
