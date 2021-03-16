@@ -537,7 +537,7 @@ func (l *txPricedList) Discard(slots int, force bool) (types.Transactions, bool)
 			continue
 		}
 		// Non stale transaction found, discard it
-		drop = append(drop, tx)
+		drop = append(drop, tx) //mike 丢弃低价值的tx
 		slots -= numSlots(tx)
 	}
 	// If we still can't make enough room for the new transaction

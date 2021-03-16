@@ -161,7 +161,7 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition 
 // the gas used (which includes gas refunds) and an error if it failed. An error always
 // indicates a core error meaning that the message would always fail for that particular
 // state and would never be accepted within a block.
-func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) (*ExecutionResult, error) {
+func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) (*ExecutionResult, error) { //mike 重要函数，所有处理msg的进程都会调用
 	return NewStateTransition(evm, msg, gp).TransitionDb() //mike
 }
 
@@ -263,7 +263,7 @@ func (st *StateTransition) TransitionDb() (*ExecutionResult, error) { //mike
 		ret, st.gas, vmerr = st.evm.Call(sender, st.to(), st.data, st.gas, st.value) //mike 调用evm
 	}
 	st.refundGas()
-	st.state.AddBalance(st.evm.Context.Coinbase, new(big.Int).Mul(new(big.Int).SetUint64(st.gasUsed()), st.gasPrice))
+	st.state.AddBalance(st.evm.Context.Coinbase, new(big.Int).Mul(new(big.Int).SetUint64(st.gasUsed()), st.gasPrice)) //mike 转钱给矿工地址coinbase
 
 	return &ExecutionResult{
 		UsedGas:    st.gasUsed(),
@@ -282,7 +282,7 @@ func (st *StateTransition) refundGas() {
 
 	// Return ETH for remaining gas, exchanged at the original rate.
 	remaining := new(big.Int).Mul(new(big.Int).SetUint64(st.gas), st.gasPrice)
-	st.state.AddBalance(st.msg.From(), remaining)
+	st.state.AddBalance(st.msg.From(), remaining) //mike 将剩余的gas费归还给发送者
 
 	// Also return remaining gas to the block gas counter so it is
 	// available for the next transaction.

@@ -412,7 +412,7 @@ func (evm *EVM) StaticCall(caller ContractRef, addr common.Address, input []byte
 		gas = contract.Gas
 	}
 	if err != nil {
-		evm.StateDB.RevertToSnapshot(snapshot)
+		evm.StateDB.RevertToSnapshot(snapshot) //mike 回滚
 		if err != ErrExecutionReverted {
 			gas = 0
 		}

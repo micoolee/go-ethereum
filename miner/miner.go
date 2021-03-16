@@ -65,7 +65,7 @@ type Miner struct {
 }
 
 func New(eth Backend, config *Config, chainConfig *params.ChainConfig, mux *event.TypeMux, engine consensus.Engine, isLocalBlock func(block *types.Block) bool) *Miner {
-	miner := &Miner{
+	miner := &Miner{ //mike 创建一个矿工
 		eth:     eth,
 		mux:     mux,
 		engine:  engine,
@@ -193,7 +193,7 @@ func (miner *Miner) PendingBlock() *types.Block {
 	return miner.worker.pendingBlock()
 }
 
-func (miner *Miner) SetEtherbase(addr common.Address) {
+func (miner *Miner) SetEtherbase(addr common.Address) { //mike 设置矿工的收益地址
 	miner.coinbase = addr
 	miner.worker.setEtherbase(addr)
 }

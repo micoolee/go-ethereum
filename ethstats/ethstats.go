@@ -73,7 +73,7 @@ type backend interface {
 
 // fullNodeBackend encompasses the functionality necessary for a full node
 // reporting to ethstats
-type fullNodeBackend interface {
+type fullNodeBackend interface { //mike 全节点
 	backend
 	Miner() *miner.Miner
 	BlockByNumber(ctx context.Context, number rpc.BlockNumber) (*types.Block, error)

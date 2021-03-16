@@ -163,7 +163,7 @@ func checkWhisper(ctx *cli.Context) {
 }
 
 // makeFullNode loads geth configuration and creates the Ethereum backend.
-func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) {
+func makeFullNode(ctx *cli.Context) (*node.Node, ethapi.Backend) { //mike 创建一个全节点的以太坊接入
 	stack, cfg := makeConfigNode(ctx)
 
 	backend := utils.RegisterEthService(stack, &cfg.Eth)

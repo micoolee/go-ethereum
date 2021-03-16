@@ -204,7 +204,7 @@ func NewPrivateAccountAPI(b Backend, nonceLock *AddrLocker) *PrivateAccountAPI {
 }
 
 // listAccounts will return a list of addresses for accounts this node manages.
-func (s *PrivateAccountAPI) ListAccounts() []common.Address {
+func (s *PrivateAccountAPI) ListAccounts() []common.Address { //mike 列出所有账户
 	return s.am.Accounts()
 }
 
@@ -1576,7 +1576,7 @@ func SubmitTransaction(ctx context.Context, b Backend, tx *types.Transaction) (c
 
 // SendTransaction creates a transaction for the given argument, sign it and submit it to the
 // transaction pool.
-func (s *PublicTransactionPoolAPI) SendTransaction(ctx context.Context, args SendTxArgs) (common.Hash, error) {
+func (s *PublicTransactionPoolAPI) SendTransaction(ctx context.Context, args SendTxArgs) (common.Hash, error) { //mike 发起转账
 	// Look up the wallet containing the requested signer
 	account := accounts.Account{Address: args.From}
 

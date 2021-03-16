@@ -224,7 +224,7 @@ func newWorker(config *Config, chainConfig *params.ChainConfig, engine consensus
 		recommit = minRecommitInterval
 	}
 
-	go worker.mainLoop()
+	go worker.mainLoop() //mike 矿工挖矿的进程
 	go worker.newWorkLoop(recommit)
 	go worker.resultLoop()
 	go worker.taskLoop()
